@@ -13,7 +13,7 @@
 
 | Campo | |
 |---|---|
-| **Total de bugs corrigidos** | 4 / 12 |
+| **Total de bugs corrigidos** | 5 / 12 |
 | **Total de ajustes de Clean Code** | 2 / 6 |
 | **Total de testes novos escritos** | 6 / 6 |
 | **Suíte final (Run As → JUnit Test)** | ___ testes, ___ falhas |
@@ -31,7 +31,7 @@
 | bug02 | `TosaTest.deveDurar60Minutos` (teste01) vermelho: `expected: <60> but was: <30>`, a Tosa durava os 30 min padrão em vez de 60 | `Tosa.java`, linha 40: o método era `getDuracaoMinutos(String porte)`, com um parâmetro a mais, então não sobrescrevia o `getDuracaoMinutos()` do `Atendimento` | Tirei o parâmetro `String porte` e acrescentei `@Override`, deixando a assinatura igual à da classe-mãe | Sobrescrita vs sobrecarga (Aula 7): com a assinatura diferente, o método virou uma sobrecarga e o polimorfismo chamava o da classe-mãe. O `@Override` faz o compilador acusar esse erro |
 | bug03 | `BanhoTest.deveCustar60ReaisParaPortePequeno` (teste02) vermelho: `expected: <60.0> but was: <100.0>`, o banho de porte pequeno saía pelo preço do grande | `Banho.java`, linhas 28 e 32: no `calcularPreco()`, PEQUENO retornava 100.0 e o caso padrão (GRANDE) retornava 60.0, com os valores invertidos | Troquei os valores: PEQUENO → 60.0 e GRANDE → 100.0 (MEDIO continua 80.0), conforme a tabela do contrato | Regra de negócio no model e polimorfismo (cada subclasse calcula o próprio preço); testes unitários (Aula 15) como contrato: a regra não tinha cobertura e o erro só apareceu com o teste novo |
 | bug04 | `AtendimentoBuilderTest.deveMontarAtendimentoCompleto` vermelho: `expected: <Rex> but was: <null>`, o atendimento montado pelo Builder saía sem o nome do pet | `AtendimentoBuilder.java`, linha 24: no `comPet`, `petNome = petNome;` atribuía o parâmetro a ele mesmo, sem o `this`, então o atributo da classe nunca era preenchido | Troquei para `this.petNome = petNome;` | Encapsulamento e o uso do `this` (POO): quando o parâmetro tem o mesmo nome do atributo, ele "esconde" o atributo (shadowing), e só o `this.` acessa o campo do objeto |
-| bug05 | | | | |
+| bug05 | `AgendaServiceTest.deveRecusarAgendamentoComHorarioJaOcupado` vermelho: o Rex já tinha banho AGENDADO no mesmo horário, mas o segundo agendamento passava sem `HorarioOcupadoException` | `AgendaService.java`, linha 23: a verificação de conflito comparava `getPetNome()` (String) e `getDataHora()` (LocalDateTime) com `==`, que compara referências e não valores | Troquei os dois `==` por `.equals()` | `==` vs `.equals()` (Aula 7): `==` em objetos compara se são o mesmo objeto na memória. Com `"Rex"` funcionava por sorte (literais de String ficam no pool e viram a mesma referência), mas a data vinda de outro objeto (`LocalDateTime.parse`) tinha o mesmo valor em outra referência |
 | bug06 | | | | |
 | bug07 | | | | |
 | bug08 | | | | |
