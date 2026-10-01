@@ -14,7 +14,7 @@
 | Campo | |
 |---|---|
 | **Total de bugs corrigidos** | ___ / 12 |
-| **Total de ajustes de Clean Code** | 1 / 6 |
+| **Total de ajustes de Clean Code** | 2 / 6 |
 | **Total de testes novos escritos** | 6 / 6 |
 | **Suíte final (Run As → JUnit Test)** | ___ testes, ___ falhas |
 
@@ -45,7 +45,7 @@
 | # | Onde estava | Qual princípio/boas práticas era violado | O que eu mudei |
 |---|---|---|---|
 | clean01 | `AtendimentoController` — método privado `calcularDescontoFidelidade` e comentário "Fidelidade (futuro)" no fim da classe | Código morto / YAGNI: método nunca chamado, escrito "para o futuro", que só polui a classe e confunde quem lê | Removi o método e o comentário; se a regra de fidelidade for aprovada, ela é implementada quando for necessária (e o histórico do git guarda a versão antiga) |
-| clean02 | | | |
+| clean02 | `AtendimentoFactory.criar` — parâmetros `p, t, n, po, tu, d` | Nomes significativos: abreviações de 1–2 letras não dizem o que guardam e obrigam quem lê a decifrar cada uma (`po` é porte? `tu` é tutor?) | Renomeei para `protocolo, tipo, petNome, petPorte, tutorNome, dataHora`, os mesmos nomes usados no resto do projeto |
 | clean03 | | | |
 | clean04 | | | |
 | clean05 | | | |
