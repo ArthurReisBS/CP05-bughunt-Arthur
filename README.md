@@ -13,7 +13,7 @@
 
 | Campo | |
 |---|---|
-| **Total de bugs corrigidos** | ___ / 12 |
+| **Total de bugs corrigidos** | 1 / 12 |
 | **Total de ajustes de Clean Code** | 2 / 6 |
 | **Total de testes novos escritos** | 6 / 6 |
 | **Suíte final (Run As → JUnit Test)** | ___ testes, ___ falhas |
@@ -27,7 +27,7 @@
 
 | # | Sintoma observado (o que fiz/vi) | Causa raiz (arquivo e linha aproximada) | Correção aplicada | Conceito da disciplina |
 |---|---|---|---|---|
-| bug01 | | | | |
+| bug01 | `AtendimentoFactoryTest.deveCriarTosaQuandoTipoForTosa` vermelho: pedi um atendimento do tipo `"TOSA"` e veio um objeto `Banho` (esperado `Tosa`) | `AtendimentoFactory.java`, linha 17: o `case "TOSA"` instanciava `new Banho(...)` | Troquei para `new Tosa(...)` no `case "TOSA"` | Padrão Factory (Aula 14) e polimorfismo: a Factory é o único lugar que conhece as subclasses concretas, então um `case` errado faz todo o sistema tratar uma tosa como banho (preço, pontos e duração errados) |
 | bug02 | | | | |
 | bug03 | | | | |
 | bug04 | | | | |
