@@ -15,7 +15,7 @@
 |---|---|
 | **Total de bugs corrigidos** | ___ / 12 |
 | **Total de ajustes de Clean Code** | ___ / 6 |
-| **Total de testes novos escritos** | 1 / 6 |
+| **Total de testes novos escritos** | 3 / 6 |
 | **Suíte final (Run As → JUnit Test)** | ___ testes, ___ falhas |
 
 ---
@@ -60,9 +60,9 @@
 
 | # | Teste escrito (classe.método) | Regra coberta | Resultado ao escrever (vermelho/verde) |
 |---|---|---|---|
-| teste01 | `TosaTest.deveDurar60Minutos` | Tosa dura 60 minutos (tabela de preço, pontos e duração) | **Vermelho** |
-| teste02 | `BanhoTest.deveCustar60ReaisParaPortePequeno` | Banho de porte pequeno custa R$ 60,00 (tabela de preço, pontos e duração) | **Vermelho** |
-| teste03 | | | |
+| teste01 | `TosaTest.deveDurar60Minutos` | Tosa dura 60 minutos (tabela de preço, pontos e duração) | **Vermelho** - revelou que o `getDuracaoMinutos(String porte)` da Tosa é uma sobrecarga, não uma sobrescrita, então valia a duração padrão do `Atendimento` |
+| teste02 | `BanhoTest.deveCustar60ReaisParaPortePequeno` | Banho de porte pequeno custa R$ 60,00 (tabela de preço, pontos e duração) | **Vermelho** - revelou que, no Banho, os valores de porte pequeno e grande estão invertidos |
+| teste03 | `ConsultaVeterinariaTest.deveCustar150Reais` | Consulta custa R$ 150,00 fixo, independente do porte (tabela de preço, pontos e duração) | **Verde** |
 | teste04 | | | |
 | teste05 | | | |
 | teste06 | | | |
