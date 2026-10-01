@@ -89,6 +89,21 @@ public class AgendaServiceTest {
     }
 
     @Test
+    public void deveCancelarAtendimentoAgendado() {
+        // Arrange
+        Banho agendado = banhoDoRexAmanha10h();
+        when(repository.findById(1L)).thenReturn(Optional.of(agendado));
+        when(repository.save(agendado)).thenReturn(agendado);
+
+        // Act
+        Atendimento cancelado = service.cancelar(1L);
+
+        // Assert
+        assertEquals("CANCELADO", cancelado.getStatus());
+        verify(repository).save(agendado);
+    }
+
+    @Test
     public void deveRecusarCancelamentoDeAtendimentoJaConcluido() {
         // Arrange
         Banho jaConcluido = banhoDoRexAmanha10h();
