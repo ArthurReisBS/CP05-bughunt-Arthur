@@ -13,7 +13,7 @@
 
 | Campo | |
 |---|---|
-| **Total de bugs corrigidos** | 2 / 12 |
+| **Total de bugs corrigidos** | 3 / 12 |
 | **Total de ajustes de Clean Code** | 2 / 6 |
 | **Total de testes novos escritos** | 6 / 6 |
 | **Suíte final (Run As → JUnit Test)** | ___ testes, ___ falhas |
@@ -29,7 +29,7 @@
 |---|---|---|---|---|
 | bug01 | `AtendimentoFactoryTest.deveCriarTosaQuandoTipoForTosa` vermelho: pedi um atendimento do tipo `"TOSA"` e veio um objeto `Banho` (esperado `Tosa`) | `AtendimentoFactory.java`, linha 17: o `case "TOSA"` instanciava `new Banho(...)` | Troquei para `new Tosa(...)` no `case "TOSA"` | Padrão Factory (Aula 14) e polimorfismo: a Factory é o único lugar que conhece as subclasses concretas, então um `case` errado faz todo o sistema tratar uma tosa como banho (preço, pontos e duração errados) |
 | bug02 | `TosaTest.deveDurar60Minutos` (teste01) vermelho: `expected: <60> but was: <30>`, a Tosa durava os 30 min padrão em vez de 60 | `Tosa.java`, linha 40: o método era `getDuracaoMinutos(String porte)`, com um parâmetro a mais, então não sobrescrevia o `getDuracaoMinutos()` do `Atendimento` | Tirei o parâmetro `String porte` e acrescentei `@Override`, deixando a assinatura igual à da classe-mãe | Sobrescrita vs sobrecarga (Aula 7): com a assinatura diferente, o método virou uma sobrecarga e o polimorfismo chamava o da classe-mãe. O `@Override` faz o compilador acusar esse erro |
-| bug03 | | | | |
+| bug03 | `BanhoTest.deveCustar60ReaisParaPortePequeno` (teste02) vermelho: `expected: <60.0> but was: <100.0>`, o banho de porte pequeno saía pelo preço do grande | `Banho.java`, linhas 28 e 32: no `calcularPreco()`, PEQUENO retornava 100.0 e o caso padrão (GRANDE) retornava 60.0, com os valores invertidos | Troquei os valores: PEQUENO → 60.0 e GRANDE → 100.0 (MEDIO continua 80.0), conforme a tabela do contrato | Regra de negócio no model e polimorfismo (cada subclasse calcula o próprio preço); testes unitários (Aula 15) como contrato: a regra não tinha cobertura e o erro só apareceu com o teste novo |
 | bug04 | | | | |
 | bug05 | | | | |
 | bug06 | | | | |
