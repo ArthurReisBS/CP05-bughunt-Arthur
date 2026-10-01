@@ -15,7 +15,7 @@
 |---|---|
 | **Total de bugs corrigidos** | ___ / 12 |
 | **Total de ajustes de Clean Code** | ___ / 6 |
-| **Total de testes novos escritos** | ___ / 6 |
+| **Total de testes novos escritos** | 1 / 6 |
 | **Suíte final (Run As → JUnit Test)** | ___ testes, ___ falhas |
 
 ---
@@ -60,7 +60,7 @@
 
 | # | Teste escrito (classe.método) | Regra coberta | Resultado ao escrever (vermelho/verde) |
 |---|---|---|---|
-| teste01 | | | |
+| teste01 | `TosaTest.deveDurar60Minutos` | Tosa dura 60 minutos (tabela de preço, pontos e duração) | **Vermelho** |
 | teste02 | | | |
 | teste03 | | | |
 | teste04 | | | |
