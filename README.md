@@ -61,7 +61,7 @@
 | # | Teste escrito (classe.método) | Regra coberta | Resultado ao escrever (vermelho/verde) |
 |---|---|---|---|
 | teste01 | `TosaTest.deveDurar60Minutos` | Tosa dura 60 minutos (tabela de preço, pontos e duração) | **Vermelho** |
-| teste02 | | | |
+| teste02 | `BanhoTest.deveCustar60ReaisParaPortePequeno` | Banho de porte pequeno custa R$ 60,00 (tabela de preço, pontos e duração) | **Vermelho** |
 | teste03 | | | |
 | teste04 | | | |
 | teste05 | | | |
