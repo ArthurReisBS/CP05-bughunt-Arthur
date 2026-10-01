@@ -15,7 +15,7 @@
 |---|---|
 | **Total de bugs corrigidos** | ___ / 12 |
 | **Total de ajustes de Clean Code** | ___ / 6 |
-| **Total de testes novos escritos** | 3 / 6 |
+| **Total de testes novos escritos** | 4 / 6 |
 | **Suíte final (Run As → JUnit Test)** | ___ testes, ___ falhas |
 
 ---
@@ -63,7 +63,7 @@
 | teste01 | `TosaTest.deveDurar60Minutos` | Tosa dura 60 minutos (tabela de preço, pontos e duração) | **Vermelho** - revelou que o `getDuracaoMinutos(String porte)` da Tosa é uma sobrecarga, não uma sobrescrita, então valia a duração padrão do `Atendimento` |
 | teste02 | `BanhoTest.deveCustar60ReaisParaPortePequeno` | Banho de porte pequeno custa R$ 60,00 (tabela de preço, pontos e duração) | **Vermelho** - revelou que, no Banho, os valores de porte pequeno e grande estão invertidos |
 | teste03 | `ConsultaVeterinariaTest.deveCustar150Reais` | Consulta custa R$ 150,00 fixo, independente do porte (tabela de preço, pontos e duração) | **Verde** |
-| teste04 | | | |
+| teste04 | `AgendaServiceTest.deveRecusarCancelamentoDeAtendimentoJaConcluido` | Cancelar um atendimento já CONCLUIDO é recusado com `StatusInvalidoException` e nada é salvo (regras de status) | **Vermelho** - revelou que o `cancelar()` do `Atendimento` não valida o status |
 | teste05 | | | |
 | teste06 | | | |
 

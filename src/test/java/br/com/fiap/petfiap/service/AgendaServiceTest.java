@@ -89,6 +89,21 @@ public class AgendaServiceTest {
     }
 
     @Test
+    public void deveRecusarCancelamentoDeAtendimentoJaConcluido() {
+        // Arrange
+        Banho jaConcluido = banhoDoRexAmanha10h();
+        jaConcluido.setStatus("CONCLUIDO");
+        when(repository.findById(1L)).thenReturn(Optional.of(jaConcluido));
+
+        // Act + Assert: a excecao ESPERADA
+        assertThrows(StatusInvalidoException.class, () -> service.cancelar(1L));
+
+        // Nada e salvo quando a operacao e recusada
+        verify(repository, never()).save(any());
+
+    }
+
+    @Test
     public void deveRecusarConclusaoDeAtendimentoJaConcluido() {
         // Arrange
         Banho jaConcluido = banhoDoRexAmanha10h();
