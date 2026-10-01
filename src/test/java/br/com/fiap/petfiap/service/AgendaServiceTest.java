@@ -39,6 +39,10 @@ public class AgendaServiceTest {
         return new Banho(1, "Rex", "PEQUENO", "Ana", LocalDateTime.now().plusDays(1).withNano(0));
     }
 
+    private Banho banhoDoRexOntem10h() {
+        return new Banho(1, "Rex", "PEQUENO", "Ana", LocalDateTime.now().plusDays(-1).withNano(0));
+    }
+
     @Test
     public void deveAgendarQuandoHorarioDoPetEstaLivre() {
         // Arrange: nenhum atendimento anterior para o Rex
@@ -71,6 +75,19 @@ public class AgendaServiceTest {
 
         // O banco NUNCA e acionado com o conflito detectado
         verify(repository, never()).save(any());
+    }
+
+    @Test
+    public void deveRecusarAgendamentoComHorarioNoPassado() {
+        // Arrange: o Rex tenta agendar ontem às 10 horas
+        Banho passadoBanho = banhoDoRexOntem10h();
+
+        // Act + Assert
+        assertThrows(IllegalArgumentException.class, () -> service.agendar(passadoBanho));
+
+        // O banco NUNCA e acionado ou consultado
+        verify(repository, never()).save(any());
+        verify(repository, never()).findByPetNome(any());
     }
 
     @Test

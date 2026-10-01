@@ -15,7 +15,7 @@
 |---|---|
 | **Total de bugs corrigidos** | ___ / 12 |
 | **Total de ajustes de Clean Code** | ___ / 6 |
-| **Total de testes novos escritos** | 5 / 6 |
+| **Total de testes novos escritos** | 6 / 6 |
 | **Suíte final (Run As → JUnit Test)** | ___ testes, ___ falhas |
 
 ---
@@ -65,7 +65,7 @@
 | teste03 | `ConsultaVeterinariaTest.deveCustar150Reais` | Consulta custa R$ 150,00 fixo, independente do porte (tabela de preço, pontos e duração) | **Verde** |
 | teste04 | `AgendaServiceTest.deveRecusarCancelamentoDeAtendimentoJaConcluido` | Cancelar um atendimento já CONCLUIDO é recusado com `StatusInvalidoException` e nada é salvo (regras de status) | **Vermelho** - revelou que o `cancelar()` do `Atendimento` não valida o status |
 | teste05 | `AgendaServiceTest.deveCancelarAtendimentoAgendado` | Cancelar um atendimento AGENDADO muda o status para CANCELADO e salva (regras de status) | **Verde** |
-| teste06 | | | |
+| teste06 | `AgendaServiceTest.deveRecusarAgendamentoComHorarioNoPassado` | Agendar com data/hora no passado é recusado com `IllegalArgumentException` e o banco nem é consultado (regras de agendamento) | **Vermelho** - revelou que o `agendar()` do `AgendaService` não valida a data: consulta o banco e tenta salvar um atendimento no passado |
 
 ---
 
