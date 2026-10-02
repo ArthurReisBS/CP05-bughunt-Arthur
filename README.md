@@ -14,7 +14,7 @@
 | Campo | |
 |---|---|
 | **Total de bugs corrigidos** | 12 / 12 |
-| **Total de ajustes de Clean Code** | 4 / 6 |
+| **Total de ajustes de Clean Code** | 5 / 6 |
 | **Total de testes novos escritos** | 6 / 6 |
 | **Suíte final (Run As → JUnit Test)** | ___ testes, ___ falhas |
 
@@ -48,7 +48,7 @@
 | clean02 | `AtendimentoFactory.criar` — parâmetros `p, t, n, po, tu, d` | Nomes significativos: abreviações de 1–2 letras não dizem o que guardam e obrigam quem lê a decifrar cada uma (`po` é porte? `tu` é tutor?) | Renomeei para `protocolo, tipo, petNome, petPorte, tutorNome, dataHora`, os mesmos nomes usados no resto do projeto |
 | clean03 | `AgendaService.agendar` — `System.out.println("Recibo: atendimento ...")` logo depois do `repository.save` | Responsabilidade única e saída no lugar errado: o service cuida da regra de agendamento, não de imprimir recibo. Um `System.out.println` em código de produção só escreve no console do servidor, onde o cliente da API nunca vê, e ainda expõe nome do pet e do tutor | Removi o `println`; o `agendar` agora só salva e devolve o atendimento, e quem chama a API recebe esses mesmos dados no corpo da resposta |
 | clean04 | `GeradorProtocolo` — `System.out.println("GeradorProtocolo criado!")` dentro do construtor privado | Rastro de depuração esquecido no código: a linha só servia para o programador ver no console que o objeto tinha nascido. Um construtor deve apenas inicializar o objeto, sem efeito colateral de escrever na saída padrão | Removi o `println`; o construtor ficou só com `contador = 0`. A garantia de instância única é verificada pelos testes do `GeradorProtocoloTest`, não por uma mensagem no console |
-| clean05 | | | |
+| clean05 | `Atendimento` (construtor, `concluir` e `cancelar`) e `AgendaService.agendar` — os textos `"AGENDADO"`, `"CONCLUIDO"` e `"CANCELADO"` escritos direto no código, seis vezes nos dois arquivos | Strings mágicas / DRY: o mesmo literal repetido em vários lugares. Um erro de digitação em um deles (`"AGENDAD0"`) compila normalmente e só quebra a regra de status em tempo de execução, sem nenhum aviso | Criei as constantes `STATUS_AGENDADO`, `STATUS_CONCLUIDO` e `STATUS_CANCELADO` no `Atendimento` (no mesmo estilo do `TIPO` que `Banho`, `Tosa` e `ConsultaVeterinaria` já usavam) e troquei todos os literais por elas; agora um nome errado vira erro de compilação |
 | clean06 | | | |
 
 ## Parte 3 — Testes novos (regras que estavam sem cobertura)
