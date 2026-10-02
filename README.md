@@ -14,7 +14,7 @@
 | Campo | |
 |---|---|
 | **Total de bugs corrigidos** | 12 / 12 |
-| **Total de ajustes de Clean Code** | 3 / 6 |
+| **Total de ajustes de Clean Code** | 4 / 6 |
 | **Total de testes novos escritos** | 6 / 6 |
 | **Suíte final (Run As → JUnit Test)** | ___ testes, ___ falhas |
 
@@ -47,7 +47,7 @@
 | clean01 | `AtendimentoController` — método privado `calcularDescontoFidelidade` e comentário "Fidelidade (futuro)" no fim da classe | Código morto / YAGNI: método nunca chamado, escrito "para o futuro", que só polui a classe e confunde quem lê | Removi o método e o comentário; se a regra de fidelidade for aprovada, ela é implementada quando for necessária (e o histórico do git guarda a versão antiga) |
 | clean02 | `AtendimentoFactory.criar` — parâmetros `p, t, n, po, tu, d` | Nomes significativos: abreviações de 1–2 letras não dizem o que guardam e obrigam quem lê a decifrar cada uma (`po` é porte? `tu` é tutor?) | Renomeei para `protocolo, tipo, petNome, petPorte, tutorNome, dataHora`, os mesmos nomes usados no resto do projeto |
 | clean03 | `AgendaService.agendar` — `System.out.println("Recibo: atendimento ...")` logo depois do `repository.save` | Responsabilidade única e saída no lugar errado: o service cuida da regra de agendamento, não de imprimir recibo. Um `System.out.println` em código de produção só escreve no console do servidor, onde o cliente da API nunca vê, e ainda expõe nome do pet e do tutor | Removi o `println`; o `agendar` agora só salva e devolve o atendimento, e quem chama a API recebe esses mesmos dados no corpo da resposta |
-| clean04 | | | |
+| clean04 | `GeradorProtocolo` — `System.out.println("GeradorProtocolo criado!")` dentro do construtor privado | Rastro de depuração esquecido no código: a linha só servia para o programador ver no console que o objeto tinha nascido. Um construtor deve apenas inicializar o objeto, sem efeito colateral de escrever na saída padrão | Removi o `println`; o construtor ficou só com `contador = 0`. A garantia de instância única é verificada pelos testes do `GeradorProtocoloTest`, não por uma mensagem no console |
 | clean05 | | | |
 | clean06 | | | |
 
