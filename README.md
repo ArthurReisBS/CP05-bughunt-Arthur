@@ -13,7 +13,7 @@
 
 | Campo | |
 |---|---|
-| **Total de bugs corrigidos** | 6 / 12 |
+| **Total de bugs corrigidos** | 7 / 12 |
 | **Total de ajustes de Clean Code** | 2 / 6 |
 | **Total de testes novos escritos** | 6 / 6 |
 | **Suíte final (Run As → JUnit Test)** | ___ testes, ___ falhas |
@@ -33,7 +33,7 @@
 | bug04 | `AtendimentoBuilderTest.deveMontarAtendimentoCompleto` vermelho: `expected: <Rex> but was: <null>`, o atendimento montado pelo Builder saía sem o nome do pet | `AtendimentoBuilder.java`, linha 24: no `comPet`, `petNome = petNome;` atribuía o parâmetro a ele mesmo, sem o `this`, então o atributo da classe nunca era preenchido | Troquei para `this.petNome = petNome;` | Encapsulamento e o uso do `this` (POO): quando o parâmetro tem o mesmo nome do atributo, ele "esconde" o atributo (shadowing), e só o `this.` acessa o campo do objeto |
 | bug05 | `AgendaServiceTest.deveRecusarAgendamentoComHorarioJaOcupado` vermelho: o Rex já tinha banho AGENDADO no mesmo horário, mas o segundo agendamento passava sem `HorarioOcupadoException` | `AgendaService.java`, linha 23: a verificação de conflito comparava `getPetNome()` (String) e `getDataHora()` (LocalDateTime) com `==`, que compara referências e não valores | Troquei os dois `==` por `.equals()` | `==` vs `.equals()` (Aula 7): `==` em objetos compara se são o mesmo objeto na memória. Com `"Rex"` funcionava por sorte (literais de String ficam no pool e viram a mesma referência), mas a data vinda de outro objeto (`LocalDateTime.parse`) tinha o mesmo valor em outra referência |
 | bug06 | `AtendimentoBuilderTest.deveRecusarMontagemSemNomeDoPet` e `deveRecusarMontagemSemPorte` vermelhos: os dois esperavam `IllegalArgumentException`, mas o Builder montava o atendimento normalmente com nome ou porte `null` | `AtendimentoBuilder.java`, linha 41: o `construir` repassava os campos direto para a `AtendimentoFactory`, sem nenhuma validação | No começo do `construir`, verifico se `petNome` ou `petPorte` são `null` e, se forem, lanço `IllegalArgumentException` antes de chamar a Factory | Padrão Builder (Aula 14) e exceções: o `construir` é o último passo da montagem, então é ali que o objeto precisa ser validado para só nascer válido, mesmo que o `comPet` nunca seja chamado. |
-| bug07 | | | | |
+| bug07 | `AgendaServiceTest.deveRecusarCancelamentoDeAtendimentoJaConcluido` (teste04) vermelho: esperava `StatusInvalidoException` ao cancelar um atendimento já CONCLUIDO, mas nada era lançado e o atendimento era salvo como CANCELADO | `Atendimento.java`, linha 63: o `cancelar()` só fazia `status = "CANCELADO"`, sem olhar o status atual (o `concluir()`, logo acima, já fazia essa verificação) | No começo do `cancelar()`, se o status não for `"AGENDADO"`, lanço `StatusInvalidoException`; só depois troco o status para `"CANCELADO"` | Encapsulamento e exceções personalizadas: a regra de transição de status fica dentro do próprio `Atendimento`, que protege o seu estado, em vez de depender de quem chama. O service só repassa a exceção e, por isso, não chega a salvar |
 | bug08 | | | | |
 | bug09 | | | | |
 | bug10 | | | | |
