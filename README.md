@@ -1,8 +1,5 @@
 # Checkpoint 5 — Bug Hunt PetFiap
 
-> Copie este arquivo para a raiz do seu repositório com o nome **README.md**
-> e preencha todas as seções.
-
 ## Identificação
 
 **Grupo:** Arthur
