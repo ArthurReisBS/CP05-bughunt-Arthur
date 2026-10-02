@@ -13,7 +13,7 @@
 
 | Campo | |
 |---|---|
-| **Total de bugs corrigidos** | 7 / 12 |
+| **Total de bugs corrigidos** | 8 / 12 |
 | **Total de ajustes de Clean Code** | 2 / 6 |
 | **Total de testes novos escritos** | 6 / 6 |
 | **Suíte final (Run As → JUnit Test)** | ___ testes, ___ falhas |
@@ -34,7 +34,7 @@
 | bug05 | `AgendaServiceTest.deveRecusarAgendamentoComHorarioJaOcupado` vermelho: o Rex já tinha banho AGENDADO no mesmo horário, mas o segundo agendamento passava sem `HorarioOcupadoException` | `AgendaService.java`, linha 23: a verificação de conflito comparava `getPetNome()` (String) e `getDataHora()` (LocalDateTime) com `==`, que compara referências e não valores | Troquei os dois `==` por `.equals()` | `==` vs `.equals()` (Aula 7): `==` em objetos compara se são o mesmo objeto na memória. Com `"Rex"` funcionava por sorte (literais de String ficam no pool e viram a mesma referência), mas a data vinda de outro objeto (`LocalDateTime.parse`) tinha o mesmo valor em outra referência |
 | bug06 | `AtendimentoBuilderTest.deveRecusarMontagemSemNomeDoPet` e `deveRecusarMontagemSemPorte` vermelhos: os dois esperavam `IllegalArgumentException`, mas o Builder montava o atendimento normalmente com nome ou porte `null` | `AtendimentoBuilder.java`, linha 41: o `construir` repassava os campos direto para a `AtendimentoFactory`, sem nenhuma validação | No começo do `construir`, verifico se `petNome` ou `petPorte` são `null` e, se forem, lanço `IllegalArgumentException` antes de chamar a Factory | Padrão Builder (Aula 14) e exceções: o `construir` é o último passo da montagem, então é ali que o objeto precisa ser validado para só nascer válido, mesmo que o `comPet` nunca seja chamado. |
 | bug07 | `AgendaServiceTest.deveRecusarCancelamentoDeAtendimentoJaConcluido` (teste04) vermelho: esperava `StatusInvalidoException` ao cancelar um atendimento já CONCLUIDO, mas nada era lançado e o atendimento era salvo como CANCELADO | `Atendimento.java`, linha 63: o `cancelar()` só fazia `status = "CANCELADO"`, sem olhar o status atual (o `concluir()`, logo acima, já fazia essa verificação) | No começo do `cancelar()`, se o status não for `"AGENDADO"`, lanço `StatusInvalidoException`; só depois troco o status para `"CANCELADO"` | Encapsulamento e exceções personalizadas: a regra de transição de status fica dentro do próprio `Atendimento`, que protege o seu estado, em vez de depender de quem chama. O service só repassa a exceção e, por isso, não chega a salvar |
-| bug08 | | | | |
+| bug08 | `AgendaServiceTest.deveRecusarAgendamentoComHorarioNoPassado` (teste06) vermelho: esperava `IllegalArgumentException` ao agendar um banho para ontem, mas o `agendar` consultava o banco e seguia até o `save` (no teste, estourava `NullPointerException` no recibo, porque o mock devolve `null`) | `AgendaService.java`, linha 20: o `agendar` começava direto no `repository.findByPetNome(...)`, sem nenhuma verificação da data do atendimento novo | Na primeira linha do `agendar`, antes de tocar no repository, comparo `LocalDateTime.now()` com `novo.getDataHora()` usando `isAfter`; se a data já passou, lanço `IllegalArgumentException` | Validação de regra de negócio na camada de service e exceções (falhar cedo): a entrada é validada antes de qualquer acesso ao banco, e por isso o teste consegue verificar com `verify(repository, never())` que nada foi consultado nem salvo (mock, Aula 15). Datas são objetos, então a comparação é com `isAfter`/`isBefore`, não com `<` ou `>` |
 | bug09 | | | | |
 | bug10 | | | | |
 | bug11 | | | | |
