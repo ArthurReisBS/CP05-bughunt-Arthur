@@ -16,7 +16,7 @@
 | **Total de bugs corrigidos** | 12 / 12 |
 | **Total de ajustes de Clean Code** | 6 / 6 |
 | **Total de testes novos escritos** | 6 / 6 |
-| **Suíte final (Run As → JUnit Test)** | ___ testes, ___ falhas |
+| **Suíte final (Run As → JUnit Test)** | 26 testes, 0 falhas |
 
 ---
 
@@ -79,16 +79,22 @@ O projeto chegou com 20 testes, 9 vermelhos. Descreva como você usou as
 mensagens de falha (ex.: `expected: <Rex> but was: <null>`) para caçar os bugs.
 O que a suíte de testes tem de melhor do que testar tudo na mão com curl?
 
+Resposta: Cada mensagem já dizia o esperado e o que veio, então eu só seguia o valor até onde ele se perdia. A falha que esperava Rex e recebia null me levou ao comPet do AtendimentoBuilder, que fazia petNome = petNome sem o this. A que esperava Mimi e recebia null levou ao super() vazio da ConsultaVeterinaria, e a que esperava 2 e recebia 1 ao GeradorProtocolo, que não guardava a instância. Comparada ao curl, a suíte roda em segundos, não precisa de banco, cobre os caminhos de erro e pode ser repetida a cada correção para ver se nada quebrou. Só o bug do @GeneratedValue precisou da API rodando, porque os testes usam mock.
+
 ### 2. Mock e injeção de dependência (Aulas 13 a 15)
 No `AgendaServiceTest`, o `@Mock` cria um `AtendimentoRepository` falso e o
 `@InjectMocks` o injeta no service. Explique a relação disso com o `@Autowired`
 que o Spring faz em produção — quem "injeta" em cada mundo, e por que o teste
 consegue rodar sem banco e sem subir o Spring?
 
+Resposta: O AgendaService não cria o repository, só declara que precisa de um. Em produção, o container do Spring cria a implementação do AtendimentoRepository e a entrega ao service por causa do @Autowired. No teste, quem faz isso é o Mockito: o @Mock cria um repository falso e o @InjectMocks cria o service já com o falso no atributo repository. O teste roda sem banco porque o falso só devolve o que eu defino com when(...).thenReturn(...), e sem Spring porque o service é criado direto pelo Mockito. Ainda dá para conferir as chamadas, como no teste06 com verify(repository, never()).findByPetNome(any()).
+
 ### 3. `==` vs `.equals()` (Aula 7)
 Um dos bugs fazia o agendamento duplicado passar pela verificação de conflito.
 Explique por que `==` entre Strings e `LocalDateTime` falhou aqui, por que ele
 "funciona por sorte" com literais como `"Rex"`, e o que a sua correção mudou.
+
+Resposta: Em objetos, == compara se as duas variáveis apontam para o mesmo objeto, não o conteúdo. Na linha 23 do AgendaService, o conflito comparava getPetNome() e getDataHora() com ==. Com o nome funcionava por sorte: os dois atendimentos do teste usavam o literal "Rex", e literais iguais ficam no pool de Strings como um único objeto. Com a data não: cada chamada cria um LocalDateTime novo, de mesmo valor mas em outro objeto, então dava false e o agendamento duplicado passava. Troquei os dois por .equals(), que compara o valor.
 
 ### 4. Sobrescrita vs sobrecarga (Aula 7)
 Um dos bugs compilava sem nenhum erro: um método parecia sobrescrever
@@ -96,16 +102,22 @@ Um dos bugs compilava sem nenhum erro: um método parecia sobrescrever
 diferença entre override e overload nesse caso e por que a anotação `@Override`
 teria impedido o bug.
 
+Resposta: O Atendimento tem getDuracaoMinutos(), sem parâmetros, que devolve 30. Na Tosa o método era getDuracaoMinutos(String porte): com a lista de parâmetros diferente, isso é sobrecarga (um método novo), não sobrescrita. Quem chama atendimento.getDuracaoMinutos(), como o resumo do controller, continuava executando o da classe-mãe e recebia 30 em vez de 60. Compilava porque sobrecarga é permitida. O @Override obriga o compilador a conferir se existe na classe-mãe um método com a mesma assinatura; como não existia, daria erro de compilação. Corrigi tirando o parâmetro e colocando o @Override.
+
 ### 5. Singleton manual vs bean do Spring (Aula 14)
 O `GeradorProtocolo` é um Singleton escrito à mão e causou um dos bugs.
 Explique o que ele garante, qual foi o bug, e por que o `AgendaService`
 (`@Service`) não corre o mesmo risco no container do Spring.
+
+Resposta: O Singleton garante um único GeradorProtocolo na aplicação, e portanto um único contador, para os protocolos saírem em sequência. O bug: dentro do if (instancia == null), o getInstancia() fazia return new GeradorProtocolo() sem guardar o objeto em instancia. Cada chamada criava um gerador novo com o contador zerado, e todo protocolo saía 1. O AgendaService também é único, mas quem cuida disso é o Spring: o @Service faz o container criar uma instância só e entregar a mesma em todo @Autowired. Como ninguém escreve o getInstancia() à mão, não há onde cometer esse erro.
 
 ### 6. Cobertura de testes: onde parar? (Aula 15)
 Dos 6 testes novos que você escreveu, alguns ficaram vermelhos (revelaram
 bugs) e outros verdes de cara (regras já corretas). Vale a pena manter os que
 ficaram verdes? Em um projeto real com prazo, o que você priorizaria testar:
 caminho feliz, caminhos de erro, ou 100% de cobertura? Justifique.
+
+Resposta: Quatro dos meus testes ficaram vermelhos (duração da Tosa, preço do Banho, cancelar atendimento concluído, agendar no passado) e dois verdes (preço da consulta, cancelar atendimento agendado). Vale manter os verdes: quando mudei o cancelar() para validar o status, foi o teste05 que garantiu que o cancelamento normal continuava funcionando. Com prazo, eu priorizaria os caminhos de erro e as regras com valores do contrato, que foi onde os quatro bugs apareceram; o caminho feliz se percebe usando o sistema, o erro não. Não buscaria 100% de cobertura: testar getters e setters não protege regra nenhuma, e nem assim o bug do @GeneratedValue seria pego.
 
 ---
 
