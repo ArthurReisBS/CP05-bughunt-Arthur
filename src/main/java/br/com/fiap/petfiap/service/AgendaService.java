@@ -40,14 +40,11 @@ public class AgendaService {
         return salvo;
     }
 
-    // Busca pelo id; nunca retorna null, o orElseThrow garante a excecao.
+    // Busca pelo id; 
     public Atendimento buscarPorId(Long id) {
-        try {
-            return repository.findById(id)
-                    .orElseThrow(() -> new AtendimentoNaoEncontradoException("Atendimento nao encontrado: " + id));
-        } catch (Exception e) {
-            return null;
-        }
+        return repository.findById(id)
+            .orElseThrow(() -> new AtendimentoNaoEncontradoException("Atendimento nao encontrado: " + id));
+        
     }
 
     // Conclui o atendimento (status AGENDADO -> CONCLUIDO).
